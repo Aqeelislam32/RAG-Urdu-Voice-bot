@@ -2,7 +2,7 @@
 
  Here’s the description of the Streamlit chatbot app with **emojis**:
 
-This Streamlit app is a **voice-enabled chatbot** powered by **Google Generative AI** (Gemini model) 🌟, perfect for conversational question answering in **Urdu** and **English** 🌐.
+This Streamlit app is a **RAG Urdu voice-chatbot** powered by **Google Generative AI** (Gemini model) 🌟, perfect for conversational question answering in **Urdu** and **English** 🌐.
 
 ### Key Features:
 
