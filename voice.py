@@ -211,7 +211,7 @@ def handle_user_input(user_question):
 
 
 
-api_key =   # Replace with your actual API key
+#api_key =   # Replace with your actual API key
 
 st.title("🎙️RAG Voice Conversation Chatbot 🤖")
 
