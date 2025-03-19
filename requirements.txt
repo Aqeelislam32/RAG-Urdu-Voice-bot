@@ -3,6 +3,7 @@ streamlit-mic-recorder
 langchain-google-genai
 gtts
 langchain
+langchain_community
 PyPDF2 
 python-docx  
  
