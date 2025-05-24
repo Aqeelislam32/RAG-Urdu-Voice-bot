@@ -321,7 +321,7 @@ def handle_user_input(user_question):
 
 
 
-api_key = "AIzaSyDGmiz57W57FfGlpX5oN_F2qidHDG9_86Q"  # Replace with your actual API key
+#api_key = "  # Replace with your actual API key
 
 st.title("🎙️RAG Voice Conversation Chatbot")
  
@@ -329,19 +329,24 @@ st.title("🎙️RAG Voice Conversation Chatbot")
  
  
 
-# Sidebar options for language selection and Q/A type
-language = st.sidebar.selectbox("Select Language", ["Urdu", "English", "French", "Chinese", "Arabic"])
-option = st.sidebar.selectbox("Choose an option", ["General Q/A", "Document Q/A"])
- 
- 
- 
+# ─── Google Gemini API Key Input ─────────────────────────────────────────────
+st.sidebar.title("🔐 Google Gemini API Key")
+api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
 
-# Clear chat button
-if st.sidebar.button("Clear Chat"):
+if api_key:
+    st.sidebar.success("✅ API key saved.")
+else:
+    st.sidebar.warning("⚠️ Please enter your API key to continue.")
+
+# ─── Language and Q/A Option Selection ──────────────────────────────────────
+language = st.sidebar.selectbox("🌐 Select Language", ["Urdu", "English", "French", "Chinese", "Arabic"])
+option = st.sidebar.selectbox("📘 Choose an option", ["General Q/A", "Document Q/A"])
+
+# ─── Clear Chat Button ──────────────────────────────────────────────────────
+if st.sidebar.button("🗑️ Clear Chat"):
     st.session_state.conversation_history = []
     st.session_state.audio_files = []
-    st.success("Chat history cleared.")
-
+    st.success("✅ Chat history cleared.")
 
 
  
