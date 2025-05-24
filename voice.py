@@ -17,7 +17,7 @@ from langchain.vectorstores import FAISS
 
 
 
-
+ 
 
 # Initialize conversation history
 
@@ -84,6 +84,8 @@ def display_conversation_and_audio():
                     # Play the corresponding audio file for the bot response
                     response_audio_file = f"response_audio_{(i//2)+1}.mp3"  # Create unique audio file for each response
                     st.audio(response_audio_file) 
+ 
+ 
 
 # Apply custom CSS for chat style, background, and sidebar
 css = '''
@@ -111,6 +113,37 @@ css = '''
         padding: 0 1.5rem;
         color: #fff;
     }
+    h1 {
+        text-shadow: 2px 2px 5px red; /* Highlight title color */
+        font-weight: bold;
+
+    background-color: yellow;
+    color: #4a4a4a;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    font-size: 2.5em;
+    width: 100%;
+">
+    🎙️ <strong style="color: #FF6347;">RAG Voice Conversation Chatbot </strong>
+
+        background-color: skyblue !important;
+    }
+    [data-testid="stSidebar"] {
+        background-color: lightgray !important;
+    }
+    
+    
+     <div>
+        <button style="background-color: #4CAF50; color: white; padding: 10px 24px; font-size: 16px;">Start Recording</button>
+        <button style="background-color: green; color: white; padding: 10px 24px; font-size: 16px;">Clear Chat</button>
+    </div> 
+    }
+    
+     
+    
+
     /* Background and Sidebar */
     body {
         background-color: skyblue !important;
@@ -118,17 +151,93 @@ css = '''
     [data-testid="stSidebar"] {
         background-color: lightgray !important;
         }
+
+    .sidebar .stButton button {
+        background-color: green !important;
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+ 
+     
+
+    
+  
+ 
+
+
+
 </style>
 '''
 
 st.markdown(css, unsafe_allow_html=True)
+
+
+ 
+# Inject custom CSS for the background color
+st.markdown(
+    """
+    <style>
+     /* Set the background color for the entire page */
+      [data-testid="stAppViewContainer"] {
+      background-color: skyblue;
+     }
+
+    /* Customize the button styles */
+    div.stButton > button {
+        background-color: green !important;
+        color: white !important;
+        padding: 10px 20px !important;
+        border-radius: 5px !important;
+        border: none !important;
+    }
+
+     /* Style for sidebar selectbox */
+    [data-testid="stSidebar"] .stSelectbox {
+        background-color: skyblue !important;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    /* Style for download button */
+    div.stDownloadButton > button {
+        background-color: brown !important;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 20px;
+    }
+
+    
+
+
+    
+
+     
+      
+ 
+}
+
+
+
+
+
+    </style>
+ 
+    """,
+    unsafe_allow_html=True
+) 
+
+
+
+
+ 
 
 bot_template = '''
 <div class="chat-message bot">
     <div class="avatar">
         <img src="https://i.pinimg.com/originals/0c/67/5a/0c675a8e1061478d2b7b21b330093444.gif" style="max-height: 70px; max-width: 50px; border-radius: 50%; object-fit: cover;">
     </div>
-    <div class="message">{{MSG}}</div>
+    <div class="message">{{MSG}}</div>2
 </div>
 '''
 
@@ -192,7 +301,8 @@ def handle_user_input(user_question):
     # Pass chat_history when calling the conversation chain
     response = st.session_state.conversation({
         'question': user_question,
-        'chat_history': st.session_state.chat_history
+        'chat_history': st.session_state.chat_history,
+         "audio_file" : st.session_state.chat_history
     })
 
     # Update the chat history with the response
@@ -211,39 +321,30 @@ def handle_user_input(user_question):
 
 
 
-api_key =  " "  # Replace with your actual API key
+api_key = "AIzaSyDGmiz57W57FfGlpX5oN_F2qidHDG9_86Q"  # Replace with your actual API key
 
-st.title("🎙️RAG Voice Conversation Chatbot 🤖")
+st.title("🎙️RAG Voice Conversation Chatbot")
+ 
+
+ 
+ 
 
 # Sidebar options for language selection and Q/A type
-language = st.sidebar.selectbox("Select Language", ["Urdu", "English"])
+language = st.sidebar.selectbox("Select Language", ["Urdu", "English", "French", "Chinese", "Arabic"])
 option = st.sidebar.selectbox("Choose an option", ["General Q/A", "Document Q/A"])
+ 
+ 
  
 
 # Clear chat button
 if st.sidebar.button("Clear Chat"):
     st.session_state.conversation_history = []
+    st.session_state.audio_files = []
     st.success("Chat history cleared.")
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 # Set response language and prompt template based on user's language selection
 if language == "Urdu":
     chat_template = ChatPromptTemplate.from_messages(
@@ -256,6 +357,43 @@ if language == "Urdu":
         ]
     )
     response_lang = "ur"
+
+elif language == "French":
+    chat_template = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                "You are a helpful AI assistant. Please always respond to user queries in French.",
+            ),
+            ("human", "{human_input}"),
+        ]
+    )
+    response_lang = "fr"
+
+elif language == "Chinese":
+    chat_template = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                "You are a helpful AI assistant. Please always respond to user queries in Chinese.",
+            ),
+            ("human", "{human_input}"),
+        ]
+    )
+    response_lang = "zh"
+
+elif language == "Arabic":
+    chat_template = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                "You are a helpful AI assistant. Please always respond to user queries in Arabic.",
+            ),
+            ("human", "{human_input}"),
+        ]
+    )
+    response_lang = "ar"
+
 else:
     chat_template = ChatPromptTemplate.from_messages(
         [
@@ -266,8 +404,7 @@ else:
             ("human", "{human_input}"),
         ]
     )
-    response_lang = "en"
-
+    response_lang = "en" 
 # Initialize the language model
 model = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash", google_api_key=api_key
@@ -276,19 +413,25 @@ model = ChatGoogleGenerativeAI(
 chain = chat_template | model | StrOutputParser()
 
 
-# General Q/A functionality
 if option == "General Q/A":
     st.subheader("General Question and Answer")
 
     # Initialize conversation history and audio files list if not already present
     if 'conversation_history' not in st.session_state:
         st.session_state.conversation_history = []
-
+    if 'audio_files' not in st.session_state:
+        st.session_state.audio_files = []
 
     # Speech-to-text for input based on selected language
     if language == "Urdu":
         text = speech_to_text(language="ur", use_container_width=True, just_once=True, key="STT_Urdu")
-    else:
+    elif language == "French":
+        text = speech_to_text(language="fr", use_container_width=True, just_once=True, key="STT_French")
+    elif language == "Chinese":
+        text = speech_to_text(language="zh", use_container_width=True, just_once=True, key="STT_Chinese")
+    elif language == "Arabic":
+        text = speech_to_text(language="ar", use_container_width=True, just_once=True, key="STT_Arabic")
+    else:  # Default to English
         text = speech_to_text(language="en", use_container_width=True, just_once=True, key="STT_English")
 
     # Check if text was successfully recognized
@@ -306,24 +449,25 @@ if option == "General Q/A":
 
             # Generate separate audio file for the latest bot response
             response_audio_file = f"response_audio_{len(st.session_state.audio_files) + 1}.mp3"
-            tts = gTTS(text=res, lang="ur" if language == "Urdu" else "en")
+            tts_lang = "ur" if language == "Urdu" else "fr" if language == "French" else "zh" if language == "Chinese" else "ar" if language == "Arabic" else "en"
+            
+            # Generate audio only for bot response
+            tts = gTTS(text=res, lang=tts_lang)
             tts.save(response_audio_file)
 
             # Store the audio file in session state
             st.session_state.audio_files.append(response_audio_file)
 
-    # Display the conversation history in the correct order
-    bot_audio_index = 0  # Track audio files index
+    # Display the conversation history in the correct order and play the bot's audio response
     for i, message in enumerate(st.session_state.conversation_history):
         if message["role"] == "user":
-            st.markdown(user_template.replace("{{MSG}}", message["content"]), unsafe_allow_html=True)  # User query in style
+            st.markdown(user_template.replace("{{MSG}}", message["content"]), unsafe_allow_html=True)  # Display user's query
         elif message["role"] == "bot":
-            st.markdown(bot_template.replace("{{MSG}}", message["content"]), unsafe_allow_html=True)  # Bot response in style
+            st.markdown(bot_template.replace("{{MSG}}", message["content"]), unsafe_allow_html=True)  # Display bot's response
             
             # Display corresponding bot audio file if it exists
-            if bot_audio_index < len(st.session_state.audio_files):
-                st.audio(st.session_state.audio_files[bot_audio_index])  # Play the audio for the bot response
-                bot_audio_index += 1  # Move to the next audio file
+            if i // 2 < len(st.session_state.audio_files):  # Audio files are generated for bot responses only
+                st.audio(st.session_state.audio_files[i // 2])  # Play the bot response audio
 
     # Display the option to download the chat history
     if st.session_state.conversation_history:
@@ -341,17 +485,13 @@ if option == "General Q/A":
             file_name="chat_history.txt",
             mime="text/plain"
         )
- 
- 
-
- 
 
 # Document Q/A functionality
 elif option == "Document Q/A":
     st.subheader("Document Question and Answer")
 
     # File uploader for PDFs and DOCX files
-    uploaded_files = st.file_uploader("Upload your PDF or DOC files", type=["pdf", "docx"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Upload your PDF  files", type=["pdf"], accept_multiple_files=True)
 
     if uploaded_files:
         files_text = get_files_text(uploaded_files)  # Extract text from the uploaded files
@@ -368,9 +508,15 @@ elif option == "Document Q/A":
 
     # Once document is processed, start Q/A session
     if st.session_state.processComplete:
-        # Language selection for Speech-to-Text (STT) 
+        # Language selection for Speech-to-Text (STT)
         if language == "Urdu":
             user_question = speech_to_text(language="ur", key="STT_Urdu_Doc")
+        elif language == "French":
+            user_question = speech_to_text(language="fr", key="STT_French_Doc")
+        elif language == "Chinese":
+            user_question = speech_to_text(language="zh", key="STT_Chinese_Doc")
+        elif language == "Arabic":
+            user_question = speech_to_text(language="ar", key="STT_Arabic_Doc")
         else:
             user_question = speech_to_text(language="en", key="STT_English_Doc")
 
@@ -395,6 +541,12 @@ elif option == "Document Q/A":
             response_audio_file = f"response_audio_{len(st.session_state.conversation_history)//2}.mp3"
             if language == "Urdu":
                 tts = gTTS(text=response['answer'], lang='ur')  # Text-to-Speech in Urdu
+            elif language == "French":
+                tts = gTTS(text=response['answer'], lang='fr')  # Text-to-Speech in French
+            elif language == "Chinese":
+                tts = gTTS(text=response['answer'], lang='zh')  # Text-to-Speech in Chinese
+            elif language == "Arabic":
+                tts = gTTS(text=response['answer'], lang='ar')  # Text-to-Speech in Arabic
             else:
                 tts = gTTS(text=response['answer'], lang='en')  # Text-to-Speech in English
 
@@ -413,4 +565,4 @@ elif option == "Document Q/A":
             data=formatted_chat,
             file_name="chat_history.txt",
             mime="text/plain"
-        ) 
+        )
