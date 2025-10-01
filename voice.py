@@ -285,7 +285,7 @@ def get_vectorstore(text_chunks):
 
 # Setup conversation chain using Google Generative AI
 def get_conversation_chain(vectorstore, api_key):
-    model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=api_key)
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=api_key)
     return ConversationalRetrievalChain.from_llm(
         llm=model,
         retriever=vectorstore.as_retriever(),
@@ -321,7 +321,7 @@ def handle_user_input(user_question):
 
 
 
-#api_key = "  # Replace with your actual API key
+#api_key = # Replace with your actual API key
 
 st.title("🎙️RAG Voice Conversation Chatbot")
  
@@ -329,26 +329,19 @@ st.title("🎙️RAG Voice Conversation Chatbot")
  
  
 
-# ─── Google Gemini API Key Input ─────────────────────────────────────────────
-# ─── Sidebar: Gemini API Key ──────────────────────────────────────
-st.sidebar.title("🔐 Google Gemini API Key")
-api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
+# Sidebar options for language selection and Q/A type
+language = st.sidebar.selectbox("Select Language", ["Urdu", "English", "French", "Chinese", "Arabic"])
+option = st.sidebar.selectbox("Choose an option", ["General Q/A", "Document Q/A"])
+ 
+ 
+ 
 
-if not api_key:
-    st.sidebar.warning("⚠️ Please enter your Gemini API Key to continue.")
-    st.stop()   # 🔴 Stop app until API key is provided
-else:
-    st.sidebar.success("✅ API key saved.")
-
-# ─── Language and Q/A Option Selection ──────────────────────────────────────
-language = st.sidebar.selectbox("🌐 Select Language", ["Urdu", "English", "French", "Chinese", "Arabic"])
-option = st.sidebar.selectbox("📘 Choose an option", ["General Q/A", "Document Q/A"])
-
-# ─── Clear Chat Button ──────────────────────────────────────────────────────
-if st.sidebar.button("🗑️ Clear Chat"):
+# Clear chat button
+if st.sidebar.button("Clear Chat"):
     st.session_state.conversation_history = []
     st.session_state.audio_files = []
-    st.success("✅ Chat history cleared.")
+    st.success("Chat history cleared.")
+
 
 
  
@@ -573,7 +566,4 @@ elif option == "Document Q/A":
             file_name="chat_history.txt",
             mime="text/plain"
         )
-
-
-
 
