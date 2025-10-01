@@ -414,7 +414,7 @@ chain = chat_template | model | StrOutputParser()
 
 
 if option == "General Q/A":
-    st.subheader("General Question and Answer")
+    st.subheader("🗣️ General Question and Answer")
 
     # Initialize conversation history and audio files list if not already present
     if 'conversation_history' not in st.session_state:
@@ -439,9 +439,11 @@ if option == "General Q/A":
         st.subheader(f"Recognized {language} Text:")
         st.write(f"**User:** {text}")  # Display user's question
 
-        with st.spinner("Fetching Response and Converting Text To Speech..."):
-            # Get AI response
-            res = chain.invoke({"human_input": text})
+        with st.spinner("🤖 Fetching Response and Converting Text To Speech..."):
+            # Direct call to Google Generative AI model for general Q/A
+            llm = ChatGoogleGenerativeAI((model="gemini-2.5-flash", google_api_key=api_key, temperature=0.7)
+            response = llm.invoke(text)
+            res = response.content  # Extract response text
 
             # Save user message and AI response in conversation history
             st.session_state.conversation_history.append({"role": "user", "content": text})
@@ -449,7 +451,13 @@ if option == "General Q/A":
 
             # Generate separate audio file for the latest bot response
             response_audio_file = f"response_audio_{len(st.session_state.audio_files) + 1}.mp3"
-            tts_lang = "ur" if language == "Urdu" else "fr" if language == "French" else "zh" if language == "Chinese" else "ar" if language == "Arabic" else "en"
+            tts_lang = (
+                "ur" if language == "Urdu" else
+                "fr" if language == "French" else
+                "zh" if language == "Chinese" else
+                "ar" if language == "Arabic" else
+                "en"
+            )
             
             # Generate audio only for bot response
             tts = gTTS(text=res, lang=tts_lang)
@@ -461,17 +469,16 @@ if option == "General Q/A":
     # Display the conversation history in the correct order and play the bot's audio response
     for i, message in enumerate(st.session_state.conversation_history):
         if message["role"] == "user":
-            st.markdown(user_template.replace("{{MSG}}", message["content"]), unsafe_allow_html=True)  # Display user's query
+            st.markdown(user_template.replace("{{MSG}}", message["content"]), unsafe_allow_html=True)  
         elif message["role"] == "bot":
-            st.markdown(bot_template.replace("{{MSG}}", message["content"]), unsafe_allow_html=True)  # Display bot's response
+            st.markdown(bot_template.replace("{{MSG}}", message["content"]), unsafe_allow_html=True)  
             
             # Display corresponding bot audio file if it exists
-            if i // 2 < len(st.session_state.audio_files):  # Audio files are generated for bot responses only
-                st.audio(st.session_state.audio_files[i // 2])  # Play the bot response audio
+            if i // 2 < len(st.session_state.audio_files):  
+                st.audio(st.session_state.audio_files[i // 2])  
 
     # Display the option to download the chat history
     if st.session_state.conversation_history:
-        # Format the chat history for download
         formatted_chat = ""
         for i, message in enumerate(st.session_state.conversation_history):
             if message["role"] == "user":
@@ -480,7 +487,7 @@ if option == "General Q/A":
                 formatted_chat += f"Bot {i//2 + 1}: {message['content']}\n"
 
         st.download_button(
-            label="Download Chat History",
+            label="⬇️ Download Chat History",
             data=formatted_chat,
             file_name="chat_history.txt",
             mime="text/plain"
@@ -566,6 +573,7 @@ elif option == "Document Q/A":
             file_name="chat_history.txt",
             mime="text/plain"
         )
+
 
 
 
