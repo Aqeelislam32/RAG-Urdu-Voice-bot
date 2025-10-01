@@ -321,7 +321,7 @@ def handle_user_input(user_question):
 
 
 
-#api_key = # Replace with your actual API key
+api_key = "AIzaSyAFrbrnHankPB6fy7jPr3ZjUYFgOprvKrA"
 
 st.title("🎙️RAG Voice Conversation Chatbot")
  
@@ -566,4 +566,5 @@ elif option == "Document Q/A":
             file_name="chat_history.txt",
             mime="text/plain"
         )
+
 
