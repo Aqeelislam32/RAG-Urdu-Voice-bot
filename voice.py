@@ -285,7 +285,7 @@ def get_vectorstore(text_chunks):
 
 # Setup conversation chain using Google Generative AI
 def get_conversation_chain(vectorstore, api_key):
-    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=api_key)
+    model = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=api_key)
     return ConversationalRetrievalChain.from_llm(
         llm=model,
         retriever=vectorstore.as_retriever(),
@@ -573,4 +573,5 @@ elif option == "Document Q/A":
             file_name="chat_history.txt",
             mime="text/plain"
         )
+
 
