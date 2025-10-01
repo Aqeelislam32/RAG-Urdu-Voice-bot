@@ -330,13 +330,15 @@ st.title("🎙️RAG Voice Conversation Chatbot")
  
 
 # ─── Google Gemini API Key Input ─────────────────────────────────────────────
+# ─── Sidebar: Gemini API Key ──────────────────────────────────────
 st.sidebar.title("🔐 Google Gemini API Key")
 api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
 
-if api_key:
-    st.sidebar.success("✅ API key saved.")
+if not api_key:
+    st.sidebar.warning("⚠️ Please enter your Gemini API Key to continue.")
+    st.stop()   # 🔴 Stop app until API key is provided
 else:
-    st.sidebar.warning("⚠️ Please enter your API key to continue.")
+    st.sidebar.success("✅ API key saved.")
 
 # ─── Language and Q/A Option Selection ──────────────────────────────────────
 language = st.sidebar.selectbox("🌐 Select Language", ["Urdu", "English", "French", "Chinese", "Arabic"])
@@ -571,3 +573,4 @@ elif option == "Document Q/A":
             file_name="chat_history.txt",
             mime="text/plain"
         )
+
