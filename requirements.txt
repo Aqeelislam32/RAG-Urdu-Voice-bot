@@ -6,4 +6,6 @@ langchain
 langchain_community
 PyPDF2 
 python-docx  
+sentence-transformers
  
+
