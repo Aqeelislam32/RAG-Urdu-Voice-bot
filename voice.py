@@ -441,7 +441,7 @@ if option == "General Q/A":
 
         with st.spinner("🤖 Fetching Response and Converting Text To Speech..."):
             # Direct call to Google Generative AI model for general Q/A
-            llm = ChatGoogleGenerativeAI((model="gemini-2.5-flash", google_api_key=api_key, temperature=0.7)
+            llm = ChatGoogleGenerativeAI((model="gemini-2.5-flash", google_api_key=api_key)
             response = llm.invoke(text)
             res = response.content  # Extract response text
 
@@ -573,6 +573,7 @@ elif option == "Document Q/A":
             file_name="chat_history.txt",
             mime="text/plain"
         )
+
 
 
 
